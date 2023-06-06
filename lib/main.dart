@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:riverpod_example/views/combining_provider_screen.dart';
-import 'package:riverpod_example/views/future_provider_screen.dart';
+import 'package:go_router/go_router.dart';
+import 'package:riverpod_example/core/app_route.dart';
 
 void main() {
   print('inside main');
@@ -15,13 +14,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print('inside My app');
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
       debugShowCheckedModeBanner: false,
-      home: const HomeView(),
+      routerConfig: goRouter,
     );
   }
 }
@@ -49,22 +48,26 @@ class HomeView extends StatelessWidget {
               },
             ),
             MaterialButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const FutureProviderScreen(),
-                ),
+              onPressed: () => context.go(
+                Routes.futureProviderView,
               ),
+              // onPressed: () => Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => const FutureProviderView(),
+              //   ),
+              // ),
               color: Colors.blueGrey,
               child: const Text('Future provider screen'),
             ),
             MaterialButton(
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const CombiningProviderScreen(),
-                ),
-              ),
+              onPressed: () => context.go(Routes.combiningProviderView),
+              // onPressed: () => Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => const CombiningProviderView(),
+              //   ),
+              // ),
               color: Colors.indigo,
               child: const Text('combining provider screen'),
             ),
@@ -103,4 +106,3 @@ class HomeView extends StatelessWidget {
 /// - [onCancel], a life-cycle for when all listeners of a provider are removed.
 /// - [onAddListener], for when a listener is added
 /// - [onRemoveListener], for when a listener is removed
-
