@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
 import 'package:riverpod_example/core/app_route.dart';
+import 'package:riverpod_example/core/log_printer.dart';
 
 void main() {
   print('inside main');
-  runApp(const ProviderScope(child: MyApp()));
+  Logger.level = Level.debug;
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+  final Logger logger = getLogger(className: 'MyApp');
 
   @override
   Widget build(BuildContext context) {
-    print('inside My app');
+    // logger.
+    logger.d('inside MyApp');
+    // print('inside My app');
     return MaterialApp.router(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -31,11 +37,12 @@ var counterProvider = StateProvider<int>((ref) {
 });
 
 class HomeView extends StatelessWidget {
-  const HomeView({super.key});
+  HomeView({super.key});
+  final Logger logger = getLogger(className: 'Home View');
 
   @override
   Widget build(BuildContext context) {
-    print('inside home view');
+    logger.d('inside Home view');
     return Scaffold(
       body: Center(
         child: Column(
@@ -48,39 +55,31 @@ class HomeView extends StatelessWidget {
               },
             ),
             MaterialButton(
-              onPressed: () => context.go(
-                Routes.futureProviderView,
-              ),
-              // onPressed: () => Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => const FutureProviderView(),
-              //   ),
-              // ),
+              onPressed: () {
+                context.go(
+                  Routes.futureProviderView,
+                );
+              },
               color: Colors.blueGrey,
               child: const Text('Future provider screen'),
             ),
             MaterialButton(
               onPressed: () => context.go(Routes.combiningProviderView),
-              // onPressed: () => Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => const CombiningProviderView(),
-              //   ),
-              // ),
               color: Colors.indigo,
               child: const Text('combining provider screen'),
             ),
-            // Consumer(
-            //   builder: (context, ref, child) => ref.watch(futureProvider).when(
-            //         data: (data) => Text(data),
-            //         error: (error, stackTrace) {
-            //           debugPrint(error.toString());
-            //           return Text(error.toString());
-            //         },
-            //         loading: () => const CircularProgressIndicator(),
-            //       ),
-            // )
+            MaterialButton(
+              onPressed: () {
+                try {
+                  context.go(Routes.a);
+                } catch (e) {
+                  logger.e(
+                      'navigation error: ${e.toString()} - navigating to A screen from HomeView screen.');
+                }
+              },
+              color: Colors.indigo,
+              child: const Text('A screen'),
+            ),
           ],
         ),
       ),
